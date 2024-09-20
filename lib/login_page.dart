@@ -1,4 +1,5 @@
-// ignore_for_file: use_key_in_widget_constructors, sort_child_properties_last, prefer_const_constructors, prefer_interpolation_to_compose_strings
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last
+
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,21 +11,35 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  // Fungsi untuk menampilkan Snackbar
+  void _showSnackBar(BuildContext context, String message, bool isSuccess) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isSuccess ? Colors.green : Colors.red,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-              Colors.grey,
-              Colors.black12,
-            ])),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: _page(),
-        ));
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.grey,
+            Colors.black12,
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: _page(),
+      ),
+    );
   }
 
   Widget _page() {
@@ -35,21 +50,13 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _icon(),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             _inputField("Username", usernameController),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             _inputField("Password", passwordController, isPassword: true),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             _loginBtn(),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             _extraText(),
           ],
         ),
@@ -60,17 +67,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget _icon() {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 2),
-          shape: BoxShape.circle),
+        border: Border.all(color: Colors.white, width: 2),
+        shape: BoxShape.circle,
+      ),
       child: const Icon(Icons.person, color: Colors.white, size: 120),
     );
   }
 
   Widget _inputField(String hintText, TextEditingController controller,
-      {isPassword = false}) {
+      {bool isPassword = false}) {
     var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Colors.white));
+      borderRadius: BorderRadius.circular(18),
+      borderSide: const BorderSide(color: Colors.white),
+    );
     return TextField(
       style: const TextStyle(color: Colors.white),
       controller: controller,
@@ -87,16 +96,22 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginBtn() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("Username : " + usernameController.text);
-        debugPrint("Password : " + passwordController.text);
+        // Logika sederhana untuk memeriksa login
+        if (usernameController.text == "admin" &&
+            passwordController.text == "password") {
+          _showSnackBar(context, "Login berhasil!", true);
+        } else {
+          _showSnackBar(context, "Username atau password salah!", false);
+        }
       },
       child: const SizedBox(
-          width: double.infinity,
-          child: Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          )),
+        width: double.infinity,
+        child: Text(
+          "Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
         shape: const StadiumBorder(),
